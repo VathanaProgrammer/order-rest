@@ -53,11 +53,15 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🎉 SUCCESS: The Order Frontend is LIVE! 🥑✨
-            Application: order-rest
-            Author: ${{ github.actor }} 🦸‍♂️
-            Commit: ${{ github.event.head_commit.message }}
-            Grab a beer, team! 🍻
+            ✅ DEPLOYMENT SUCCESS ✅
+            ------------------------------------
+            🚀 Application: order-rest
+            🔗 Live URL: https://order.learner-teach.online
+            👤 Author: ${{ github.actor }}
+            📝 Commit: ${{ github.event.head_commit.message }}
+            ------------------------------------
+            Awesome job, ${{ github.actor }}! The order frontend deployment is fully live! 🎉
+          document: "https://media.giphy.com/media/11sBLVxNs7v6WA/giphy.gif"
 
       - name: Send Telegram Notification (Failure)
         uses: appleboy/telegram-action@master
@@ -66,9 +70,12 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🚨 FAILURE: The Order Frontend Deployment Failed! 🔥😭
-            Application: order-rest
-            Author: ${{ github.actor }} 👀
-            Commit: ${{ github.event.head_commit.message }}
-            Fix this mess: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            Coffee is for closers, no coffee for you! ☕🚫
+            ❌ DEPLOYMENT FAILED ❌
+            ------------------------------------
+            🚀 Application: order-rest
+            👤 Author: ${{ github.actor }}
+            📝 Commit: ${{ github.event.head_commit.message }}
+            ------------------------------------
+            Hey ${{ github.actor }}, the deployment pipeline failed.
+            🔍 Review the logs here: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          document: "https://media.giphy.com/media/T1WqKkLYCbC12/giphy.gif"
