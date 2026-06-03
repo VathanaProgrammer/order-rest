@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import BookingScreen from './components/BookingScreen.vue'
 </script>
 
 <template>
-  <HelloWorld />
+  <BookingScreen />
 </template>
