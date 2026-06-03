@@ -1,0 +1,3 @@
+order.learner-teach.online {
+    reverse_proxy order-ui:80
+}
