@@ -83,7 +83,7 @@ const submitBooking = () => {
             <button type="submit" 
                     class="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-lg py-4 rounded-xl shadow-[0_0_20px_rgba(245,158,11,0.3)] hover:shadow-[0_0_30px_rgba(245,158,11,0.5)] transition-all duration-300 transform hover:-translate-y-1 mt-4">
               Confirm Reservation
-            </button>
+            </button>   
           </form>
         </div>
       </div>
