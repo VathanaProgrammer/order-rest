@@ -5,7 +5,6 @@
       <div class="flex items-center gap-4 text-gray-400">
         <button class="hover:text-white transition">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d=".5 12a7.5 7.5 0 1 1 15 0 7.5 7.5 0 0 1-15 0Z" />
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
           </svg>
         </button>
@@ -97,18 +96,41 @@
           </span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div v-for="item in menuItems" :key="item.id" class="bg-[#131a26] border border-gray-800/80 rounded-xl overflow-hidden flex flex-col justify-between shadow-md">
+        <div v-if="isLoading" class="flex flex-col items-center justify-center py-20 text-blue-400 gap-2">
+          <svg class="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span class="text-xs font-medium tracking-wide text-gray-400">Syncing live catalog...</span>
+        </div>
+
+        <div v-else-if="errorMessage" class="text-center py-12 px-4 text-xs text-red-400 border border-red-900/50 bg-red-950/20 rounded-xl">
+          ⚠️ {{ errorMessage }}
+        </div>
+
+        <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div 
+            v-for="item in menuItems" 
+            :key="item.id" 
+            v-show="item.isAvailable" 
+            class="bg-[#131a26] border border-gray-800/80 rounded-xl overflow-hidden flex flex-col justify-between shadow-md"
+          >
             <div>
               <div class="h-40 bg-gray-900 overflow-hidden relative">
-                <img :src="item.image" :alt="item.name" class="w-full h-full object-cover grayscale brightness-90 contrast-125" />
+                <img 
+                  :src="item.imageUrl && item.imageUrl.startsWith('http') ? item.imageUrl : `http://localhost:7444${item.imageUrl || ''}`" 
+                  :alt="item.name" 
+                  class="w-full h-full object-cover brightness-90 contrast-125" 
+                />
               </div>
               <div class="p-4">
                 <div class="flex justify-between items-baseline gap-1 mb-2">
                   <h3 class="font-medium text-sm text-gray-200">{{ item.name }}</h3>
                   <span class="text-sm font-semibold text-gray-300">${{ item.price.toFixed(2) }}</span>
                 </div>
-                <p class="text-xs text-gray-400 leading-relaxed">{{ item.description }}</p>
+                <span class="inline-block text-[9px] font-bold uppercase tracking-wider text-blue-400 bg-blue-950/40 border border-blue-900/40 px-2 py-0.5 rounded">
+                  {{ item.itemType }}
+                </span>
               </div>
             </div>
             <div class="p-4 pt-0">
@@ -173,11 +195,13 @@
           </div>
 
           <button 
-            :disabled="basket.length === 0"
-            :class="basket.length === 0 ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-500'"
+            @click="submitReservation"
+            :disabled="isSubmitting"
+            :class="isSubmitting ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-500'"
             class="w-full flex items-center justify-center gap-2 font-bold text-xs py-3 rounded-lg transition uppercase tracking-wider"
           >
-            <span>▶</span> Confirm & Send
+            <span v-if="isSubmitting">⌛ Sending...</span>
+            <span v-else>▶ Confirm & Send</span>
           </button>
         </div>
 
@@ -196,9 +220,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
-// Interactive State
+// Base reactive state parameters
 const reservation = ref({
   date: '',
   time: '19:30',
@@ -208,34 +232,101 @@ const reservation = ref({
 })
 
 const tables = ref(['T-04', 'T-05', 'T-06', 'T-01', 'T-02', 'T-03'])
-
-const menuItems = ref([
-  {
-    id: 1,
-    name: 'Classic Double',
-    price: 18.50,
-    description: 'Double Wagyu, Aged Cheddar, Truffle Mayo.',
-    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: 2,
-    name: 'Artisan Pizza',
-    price: 22.00,
-    description: 'Buffalo Mozzarella, Basil, San Marzano.',
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: 3,
-    name: 'Neon Wings',
-    price: 14.00,
-    description: 'Honey Sriracha, Blue Cheese Dip, Celery.',
-    image: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?auto=format&fit=crop&w=400&q=80'
-  }
-])
-
 const basket = ref([])
 
-// Business Logic Functions
+// Async system data handlers
+const menuItems = ref([])
+const isLoading = ref(false)
+const isSubmitting = ref(false)
+const errorMessage = ref('')
+
+// TEAM ENDPOINT VARIABLE CONFIGURATION
+const BASE_URL = 'http://localhost:7444/api'
+
+// Fetch layout mapped directly to your team's JSON data output structure
+const fetchMenuItems = async () => {
+  isLoading.value = true
+  errorMessage.value = ''
+  try {
+    const response = await fetch(`${BASE_URL}/menu-items`)
+    if (!response.ok) {
+      throw new Error(`Server connection failure. HTTP Status: ${response.status}`)
+    }
+    
+    const apiResponse = await response.json()
+    
+    // Checks your team's explicit custom response status parameter layout
+    if (apiResponse.status === 1) {
+      menuItems.value = apiResponse.data
+    } else {
+      throw new Error(apiResponse.message || 'Server processed request with invalid response output status.')
+    }
+  } catch (error) {
+    console.error("Backend Handshake Error Details:", error)
+    errorMessage.value = "Could not pull the live pre-order menu. Check backend execution or network status."
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// POST pipeline request to write entries into the Database
+const submitReservation = async () => {
+  if (!reservation.value.date) {
+    alert("Please select a reservation date before submitting your booking.")
+    return
+  }
+
+  isSubmitting.value = true
+
+  // Bundle the payload details to mirror Spring's DTO properties perfectly
+  const payload = {
+    date: reservation.value.date,
+    time: reservation.value.time,
+    guests: reservation.value.guests,
+    zone: reservation.value.zone,
+    selectedTable: reservation.value.selectedTable,
+    basket: basket.value.map(item => ({
+      id: item.id,
+      quantity: item.quantity
+    }))
+  }
+
+  try {
+    const response = await fetch(`${BASE_URL}/reservations`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+
+    if (!response.ok) {
+      throw new Error(`Server tracking returned rejection status: ${response.status}`)
+    }
+
+    const result = await response.json()
+
+    if (result.status === 1) {
+      alert("🎉 Reservation saved successfully in the database!")
+      // Clear out selection arrays upon completion
+      basket.value = []
+    } else {
+      throw new Error(result.message || "Failed saving metadata record parameters.")
+    }
+  } catch (error) {
+    console.error("Database Write Handshake Failure:", error)
+    alert("Could not process request checkout. Check database or Spring console status logs.")
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+// Lifecycle registration wrapper
+onMounted(() => {
+  fetchMenuItems()
+})
+
+// UI Interaction methods
 const adjustGuests = (amount) => {
   const next = reservation.value.guests + amount
   if (next >= 1) reservation.value.guests = next
