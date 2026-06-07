@@ -5,12 +5,12 @@
       <div class="flex items-center gap-4 text-gray-400">
         <button class="hover:text-white transition">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </button>
         <button class="hover:text-white transition">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
           </svg>
         </button>
       </div>
@@ -51,15 +51,15 @@
             <label class="block text-xs uppercase tracking-wider text-gray-500 font-medium mb-2">Select Your Zone</label>
             <div class="grid grid-cols-2 gap-3">
               <button 
-                @click="reservation.zone = 'window'"
-                :class="reservation.zone === 'window' ? 'border-blue-500 bg-blue-950/20 text-blue-400' : 'border-gray-700 text-gray-400 hover:border-gray-600'"
+                @click="selectZone('Window Seat')"
+                :class="reservation.zone === 'Window Seat' ? 'border-blue-500 bg-blue-950/20 text-blue-400' : 'border-gray-700 text-gray-400 hover:border-gray-600'"
                 class="flex flex-col items-center justify-center py-4 border rounded-xl transition text-xs gap-2"
               >
                 <span class="text-lg">🪟</span> Window Seat
               </button>
               <button 
-                @click="reservation.zone = 'booth'"
-                :class="reservation.zone === 'booth' ? 'border-blue-500 bg-blue-950/20 text-blue-400' : 'border-gray-700 text-gray-400 hover:border-gray-600'"
+                @click="selectZone('Quiet Booth')"
+                :class="reservation.zone === 'Quiet Booth' ? 'border-blue-500 bg-blue-950/20 text-blue-400' : 'border-gray-700 text-gray-400 hover:border-gray-600'"
                 class="flex flex-col items-center justify-center py-4 border rounded-xl transition text-xs gap-2"
               >
                 <span class="text-lg">🛋️</span> Quiet Booth
@@ -68,20 +68,34 @@
           </div>
         </div>
 
-        <div class="bg-[#131a26] border border-gray-800 rounded-xl p-5 shadow-xl grid grid-cols-3 gap-3">
-          <button 
-            v-for="table in tables" 
-            :key="table"
-            @click="reservation.selectedTable = table"
-            :class="[
-              reservation.selectedTable === table 
-                ? 'border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)] text-blue-400 bg-blue-950/10' 
-                : 'border-gray-800 text-gray-600 hover:border-gray-700'
-            ]"
-            class="border py-4 rounded-lg font-medium text-sm transition text-center"
-          >
-            {{ table }}
-          </button>
+        <div class="bg-[#131a26] border border-gray-800 rounded-xl p-5 shadow-xl">
+          <h4 class="text-xs uppercase tracking-wider text-gray-500 font-medium mb-4">Available Tables</h4>
+          
+          <div v-if="isLoadingTables" class="text-center text-xs text-blue-400 py-4">
+            Loading layout map...
+          </div>
+          <div v-else-if="filteredTables.length === 0" class="text-center text-xs text-gray-500 py-4">
+            No tables setup for this zone.
+          </div>
+          <div v-else class="grid grid-cols-3 gap-3">
+            <button 
+              v-for="table in filteredTables" 
+              :key="table.id"
+              @click="reservation.selectedTable = table.tableNo"
+              :disabled="table.currentState !== 'AVAILABLE'"
+              :class="[
+                reservation.selectedTable === table.tableNo 
+                  ? 'border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)] text-blue-400 bg-blue-950/10' 
+                  : table.currentState !== 'AVAILABLE'
+                    ? 'border-gray-900 bg-gray-900/40 text-gray-700 cursor-not-allowed line-through'
+                    : 'border-gray-800 text-gray-400 hover:border-gray-700'
+              ]"
+              class="border py-4 rounded-lg font-medium text-sm transition text-center relative"
+            >
+              {{ table.tableNo }}
+              <span class="block text-[9px] text-gray-500 font-normal">Cap: {{ table.capacity }}</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -96,7 +110,7 @@
           </span>
         </div>
 
-        <div v-if="isLoading" class="flex flex-col items-center justify-center py-20 text-blue-400 gap-2">
+        <div v-if="isLoadingMenu" class="flex flex-col items-center justify-center py-20 text-blue-400 gap-2">
           <svg class="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
@@ -104,8 +118,8 @@
           <span class="text-xs font-medium tracking-wide text-gray-400">Syncing live catalog...</span>
         </div>
 
-        <div v-else-if="errorMessage" class="text-center py-12 px-4 text-xs text-red-400 border border-red-900/50 bg-red-950/20 rounded-xl">
-          ⚠️ {{ errorMessage }}
+        <div v-else-if="menuErrorMessage" class="text-center py-12 px-4 text-xs text-red-400 border border-red-900/50 bg-red-950/20 rounded-xl">
+          ⚠️ {{ menuErrorMessage }}
         </div>
 
         <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -116,11 +130,7 @@
           >
             <div>
               <div class="h-40 bg-gray-900 overflow-hidden relative">
-                <img 
-                  :src="item.imageUrl" 
-                  :alt="item.name" 
-                  class="w-full h-full object-cover brightness-90 contrast-125" 
-                />
+                <img :src="item.imageUrl" :alt="item.name" class="w-full h-full object-cover brightness-90 contrast-125" />
                 <span 
                   :class="item.status === 'IN STOCK' ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800/60' : 'bg-amber-950/80 text-amber-400 border-amber-800/60'"
                   class="absolute top-2 right-2 text-[9px] font-bold uppercase px-2 py-0.5 border rounded backdrop-blur-sm shadow-md"
@@ -134,17 +144,13 @@
                   <span class="text-sm font-semibold text-gray-300">${{ item.price.toFixed(2) }}</span>
                 </div>
                 <p class="text-xs text-gray-500 mb-3 line-clamp-1">{{ item.description }}</p>
-                
                 <span class="inline-block text-[9px] font-bold uppercase tracking-wider text-blue-400 bg-blue-950/40 border border-blue-900/40 px-2 py-0.5 rounded">
                   {{ item.category?.categoryName || 'General' }}
                 </span>
               </div>
             </div>
             <div class="p-4 pt-0">
-              <button 
-                @click="addToBasket(item)"
-                class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs py-2.5 px-4 rounded-lg transition"
-              >
+              <button @click="addToBasket(item)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs py-2.5 px-4 rounded-lg transition">
                 ADD TO ORDER
               </button>
             </div>
@@ -154,7 +160,6 @@
 
       <div class="lg:col-span-3 flex flex-col gap-4">
         <div class="bg-[#131a26] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden">
-          
           <div class="absolute top-0 right-4 bg-blue-950/50 border-x border-b border-blue-800/60 rounded-b-md px-3 py-1">
             <span class="text-[9px] uppercase font-bold text-blue-400 tracking-wider">Your Reservation</span>
           </div>
@@ -166,8 +171,9 @@
               </svg>
             </div>
             <div>
-              <h4 class="font-semibold text-sm text-gray-200">Table {{ reservation.selectedTable }}</h4>
+              <h4 class="font-semibold text-sm text-gray-200">Table {{ reservation.selectedTable || '--' }}</h4>
               <p class="text-xs text-gray-400 mt-0.5">Tonight @ {{ reservation.time || '--:--' }} • {{ reservation.guests }} Guests</p>
+              <p class="text-[10px] text-blue-400 mt-0.5">Zone: {{ reservation.zone }}</p>
             </div>
           </div>
 
@@ -175,11 +181,9 @@
 
           <div class="mb-6">
             <h5 class="text-[10px] uppercase font-bold tracking-wider text-gray-500 mb-4">Pre-Order Basket</h5>
-            
             <div v-if="basket.length === 0" class="text-center py-6 text-xs italic text-gray-500">
               No items added yet
             </div>
-            
             <div v-else class="space-y-3 max-h-48 overflow-y-auto pr-1">
               <div v-for="item in basket" :key="item.id" class="flex justify-between items-center text-xs">
                 <div class="flex items-center gap-2">
@@ -211,110 +215,138 @@
             <span v-else>▶ Confirm & Send</span>
           </button>
         </div>
-
-        <div class="border border-gray-900 bg-[#0e141f] rounded-xl px-4 py-3 flex items-center gap-3 text-xs text-gray-400">
-          <div class="text-emerald-500">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
-              <path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.475.75.75 0 0 0-.722.668A12.178 12.178 0 0 0 3 9c0 5.523 3.635 10.19 8.658 11.75a.75.75 0 0 0 .484 0C17.165 19.19 20.8 14.523 20.8 9c0-.445-.03-.882-.089-1.311a.75.75 0 0 0-.722-.668 11.21 11.21 0 0 1-7.473-3.475ZM11.25 8.25a.75.75 0 0 1 1.5 0v4.5a.75.75 0 0 1-1.5 0v-4.5Zm.75 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
-            </svg>
-          </div>
-          <p class="leading-snug">Secure checkout powered by <span class="font-semibold text-gray-300">HEKS Pay</span></p>
-        </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-// Fixed: Swapped abstract alias path prefix for direct relative file access path
 import api from '../utils/api' 
 
-// Base reactive state parameters
+// Core Booking States
 const reservation = ref({
   date: '',
   time: '19:30',
   guests: 2,
-  zone: 'window',
-  selectedTable: 'T-04'
+  zone: 'Window Seat', 
+  selectedTable: ''     
 })
 
-const tables = ref(['T-04', 'T-05', 'T-06', 'T-01', 'T-02', 'T-03'])
 const basket = ref([])
 
-// Async system data handlers
+// Dynamic Response Repositories
+const rawFloorGroups = ref([]) 
 const menuItems = ref([])
-const isLoading = ref(false)
-const isSubmitting = ref(false)
-const errorMessage = ref('')
 
-// Fetch layout mapped directly to your custom layout via api.get
-const fetchMenuItems = async () => {
-  isLoading.value = true
-  errorMessage.value = ''
+// Async Loading flags
+const isLoadingTables = ref(false)
+const isLoadingMenu = ref(false)
+const isSubmitting = ref(false)
+const menuErrorMessage = ref('')
+
+/**
+ * 1. FETCH GROUPED DINING TABLES
+ */
+const fetchTablesData = async () => {
+  isLoadingTables.value = true
   try {
-    const apiResponse = await api.get('/menu-items')
-    
-    // Checks your explicit custom parameter data response status layout
-    if (apiResponse.status === 1) {
-      menuItems.value = apiResponse.data
-    } else {
-      throw new Error(apiResponse.message || 'Server processed request with invalid response output status.')
+    const res = await api.get('/dining-tables/grouped') 
+    if (res.status === 1) {
+      rawFloorGroups.value = res.data
+      autoSelectFirstAvailable()
     }
-  } catch (error) {
-    console.error("Backend Handshake Error Details:", error)
-    errorMessage.value = "Could not pull the live pre-order menu. Check backend execution or network status."
-  } finally {
-    isLoading.value = false
+  } catch (err) {
+    console.error("Failed fetching dynamic floor layouts:", err)
+  } finally { // <--- Fixed Typo Here
+    isLoadingTables.value = false
   }
 }
 
-// POST pipeline request using api.post
+/**
+ * 2. COMPUTED FILTER
+ */
+const filteredTables = computed(() => {
+  const matchingGroup = rawFloorGroups.value.find(g => g.floor === reservation.value.zone)
+  return matchingGroup ? matchingGroup.tables : []
+})
+
+const selectZone = (zoneName) => {
+  reservation.value.zone = zoneName
+  autoSelectFirstAvailable()
+}
+
+const autoSelectFirstAvailable = () => {
+  if (filteredTables.value.length > 0) {
+    const available = filteredTables.value.find(t => t.currentState === 'AVAILABLE')
+    reservation.value.selectedTable = available ? available.tableNo : filteredTables.value[0].tableNo
+  } else {
+    reservation.value.selectedTable = ''
+  }
+}
+
+/**
+ * 3. FETCH PRE-ORDER MENU
+ */
+const fetchMenuItems = async () => {
+  isLoadingMenu.value = true
+  menuErrorMessage.value = ''
+  try {
+    const apiResponse = await api.get('/menu-items')
+    if (apiResponse.status === 1) {
+      menuItems.value = apiResponse.data
+    } else {
+      throw new Error(apiResponse.message)
+    }
+  } catch (error) {
+    menuErrorMessage.value = "Could not pull the live pre-order menu."
+  } finally {
+    isLoadingMenu.value = false
+  }
+}
+
+/**
+ * 4. SUBMIT RESERVATION
+ */
 const submitReservation = async () => {
   if (!reservation.value.date) {
-    alert("Please select a reservation date before submitting your booking.")
+    alert("Please select a reservation date.")
+    return
+  }
+  if (!reservation.value.selectedTable) {
+    alert("Please choose a table layout seat position.")
     return
   }
 
   isSubmitting.value = true
-
-  // Bundle the payload details to mirror Spring's DTO properties perfectly
   const payload = {
     date: reservation.value.date,
     time: reservation.value.time,
     guests: reservation.value.guests,
     zone: reservation.value.zone,
     selectedTable: reservation.value.selectedTable,
-    basket: basket.value.map(item => ({
-      id: item.id,
-      quantity: item.quantity
-    }))
+    basket: basket.value.map(item => ({ id: item.id, quantity: item.quantity }))
   }
 
   try {
     const result = await api.post('/reservations', payload)
-
     if (result.status === 1) {
-      alert("🎉 Reservation saved successfully in the database!")
+      alert("🎉 Booking confirmed and stored successfully!")
       basket.value = []
-    } else {
-      throw new Error(result.message || "Failed saving metadata record parameters.")
+      fetchTablesData() 
     }
   } catch (error) {
-    console.error("Database Write Handshake Failure:", error)
-    alert("Could not process request checkout. Check database or Spring console status logs.")
+    alert("Could not process request booking.")
   } finally {
     isSubmitting.value = false
   }
 }
 
-// Lifecycle registration wrapper
 onMounted(() => {
+  fetchTablesData()
   fetchMenuItems()
 })
 
-// UI Interaction methods
 const adjustGuests = (amount) => {
   const next = reservation.value.guests + amount
   if (next >= 1) reservation.value.guests = next
@@ -339,7 +371,6 @@ const basketTotal = computed(() => {
 </script>
 
 <style scoped>
-/* Customs to fine tune form field appearances natively on dark setups */
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
   filter: invert(0.7);
