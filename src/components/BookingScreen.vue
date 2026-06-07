@@ -1,220 +1,251 @@
 <template>
-  <div class="min-h-screen bg-[#0b0f19] text-[#e2e8f0] font-sans antialiased p-6 selection:bg-blue-500 selection:text-white">
-    <header class="flex justify-between items-center mb-8 border-b border-gray-800 pb-4">
-      <h1 class="text-xl font-bold tracking-wide text-gray-200">HEKS Guest</h1>
-      <div class="flex items-center gap-4 text-gray-400">
-        <button class="hover:text-white transition">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
-        </button>
-        <button class="hover:text-white transition">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-          </svg>
-        </button>
-      </div>
-    </header>
+  <div class="min-h-screen bg-[#070a13] text-[#f1f5f9] font-sans antialiased selection:bg-blue-600 selection:text-white pb-12">
+    <div class="absolute top-0 left-1/4 w-72 md:w-96 h-72 md:h-96 bg-blue-900/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-1/4 w-72 md:w-96 h-72 md:h-96 bg-indigo-900/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
-      
-      <div class="lg:col-span-4 flex flex-col gap-6">
-        <div class="bg-[#131a26] border border-gray-800 rounded-xl p-5 shadow-xl">
-          <div class="flex items-center gap-2 mb-6 text-blue-400 font-semibold">
+    <div class="relative p-3 sm:p-4 md:p-8 max-w-[1600px] mx-auto">
+      <header class="flex justify-between items-center mb-6 md:mb-8 border-b border-gray-800/60 pb-4 md:pb-5">
+        <div class="flex items-center gap-2.5 sm:gap-3">
+          <div class="h-8 w-8 sm:h-9 sm:w-9 bg-gradient-to-tr from-blue-600 to-indigo-500 rounded-xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <span class="text-white font-black text-xs sm:text-sm tracking-wider">H</span>
+          </div>
+          <div>
+            <h1 class="text-base sm:text-lg font-bold tracking-tight text-white leading-none">HEKS Guest</h1>
+            <p class="text-[9px] sm:text-[10px] text-gray-500 font-medium mt-0.5">Premium Dining Hub</p>
+          </div>
+        </div>
+        
+        <div class="flex items-center gap-1 sm:gap-2">
+          <button class="p-2 text-gray-400 hover:text-white hover:bg-gray-800/40 rounded-xl transition-all duration-200">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <h2>Table Reservation</h2>
-          </div>
-
-          <div class="grid grid-cols-2 gap-4 mb-5">
-            <div>
-              <label class="block text-xs uppercase tracking-wider text-gray-500 font-medium mb-2">Date</label>
-              <input type="date" v-model="reservation.date" class="w-full bg-[#1a2333] border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-300 focus:outline-none focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="block text-xs uppercase tracking-wider text-gray-500 font-medium mb-2">Time</label>
-              <input type="time" v-model="reservation.time" class="w-full bg-[#1a2333] border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-300 focus:outline-none focus:border-blue-500" />
-            </div>
-          </div>
-
-          <div class="mb-6">
-            <label class="block text-xs uppercase tracking-wider text-gray-500 font-medium mb-2">Guests</label>
-            <div class="flex items-center justify-between bg-[#1a2333] border border-gray-700 rounded-lg p-2">
-              <button @click="adjustGuests(-1)" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition font-bold text-lg">-</button>
-              <span class="text-lg font-semibold text-white">{{ reservation.guests }}</span>
-              <button @click="adjustGuests(1)" class="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-white transition font-bold text-lg">+</button>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs uppercase tracking-wider text-gray-500 font-medium mb-2">Select Your Zone</label>
-            <div class="grid grid-cols-2 gap-3">
-              <button 
-                @click="selectZone('Window Seat')"
-                :class="reservation.zone === 'Window Seat' ? 'border-blue-500 bg-blue-950/20 text-blue-400' : 'border-gray-700 text-gray-400 hover:border-gray-600'"
-                class="flex flex-col items-center justify-center py-4 border rounded-xl transition text-xs gap-2"
-              >
-                <span class="text-lg">🪟</span> Window Seat
-              </button>
-              <button 
-                @click="selectZone('Quiet Booth')"
-                :class="reservation.zone === 'Quiet Booth' ? 'border-blue-500 bg-blue-950/20 text-blue-400' : 'border-gray-700 text-gray-400 hover:border-gray-600'"
-                class="flex flex-col items-center justify-center py-4 border rounded-xl transition text-xs gap-2"
-              >
-                <span class="text-lg">🛋️</span> Quiet Booth
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-[#131a26] border border-gray-800 rounded-xl p-5 shadow-xl">
-          <h4 class="text-xs uppercase tracking-wider text-gray-500 font-medium mb-4">Available Tables</h4>
-          
-          <div v-if="isLoadingTables" class="text-center text-xs text-blue-400 py-4">
-            Loading layout map...
-          </div>
-          <div v-else-if="filteredTables.length === 0" class="text-center text-xs text-gray-500 py-4">
-            No tables setup for this zone.
-          </div>
-          <div v-else class="grid grid-cols-3 gap-3">
-            <button 
-              v-for="table in filteredTables" 
-              :key="table.id"
-              @click="reservation.selectedTable = table.tableNo"
-              :disabled="table.currentState !== 'AVAILABLE'"
-              :class="[
-                reservation.selectedTable === table.tableNo 
-                  ? 'border-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.3)] text-blue-400 bg-blue-950/10' 
-                  : table.currentState !== 'AVAILABLE'
-                    ? 'border-gray-900 bg-gray-900/40 text-gray-700 cursor-not-allowed line-through'
-                    : 'border-gray-800 text-gray-400 hover:border-gray-700'
-              ]"
-              class="border py-4 rounded-lg font-medium text-sm transition text-center relative"
-            >
-              {{ table.tableNo }}
-              <span class="block text-[9px] text-gray-500 font-normal">Cap: {{ table.capacity }}</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="lg:col-span-5">
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-6">
-          <div>
-            <h2 class="text-lg font-semibold text-gray-200">Pre-Order Menu</h2>
-            <p class="text-xs text-gray-400">Skip the wait and order popular items now.</p>
-          </div>
-          <span class="inline-flex items-center gap-1 text-[10px] uppercase font-bold bg-green-950/40 text-green-400 px-2.5 py-1 rounded border border-green-800/40 tracking-wider">
-            ⚡ Express Ready
-          </span>
-        </div>
-
-        <div v-if="isLoadingMenu" class="flex flex-col items-center justify-center py-20 text-blue-400 gap-2">
-          <svg class="animate-spin h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-          </svg>
-          <span class="text-xs font-medium tracking-wide text-gray-400">Syncing live catalog...</span>
-        </div>
-
-        <div v-else-if="menuErrorMessage" class="text-center py-12 px-4 text-xs text-red-400 border border-red-900/50 bg-red-950/20 rounded-xl">
-          ⚠️ {{ menuErrorMessage }}
-        </div>
-
-        <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div 
-            v-for="item in menuItems" 
-            :key="item.id" 
-            class="bg-[#131a26] border border-gray-800/80 rounded-xl overflow-hidden flex flex-col justify-between shadow-md relative"
-          >
-            <div>
-              <div class="h-40 bg-gray-900 overflow-hidden relative">
-                <img :src="item.imageUrl" :alt="item.name" class="w-full h-full object-cover brightness-90 contrast-125" />
-                <span 
-                  :class="item.status === 'IN STOCK' ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800/60' : 'bg-amber-950/80 text-amber-400 border-amber-800/60'"
-                  class="absolute top-2 right-2 text-[9px] font-bold uppercase px-2 py-0.5 border rounded backdrop-blur-sm shadow-md"
-                >
-                  {{ item.status }}
-                </span>
-              </div>
-              <div class="p-4">
-                <div class="flex justify-between items-baseline gap-1 mb-1">
-                  <h3 class="font-medium text-sm text-gray-200 leading-tight">{{ item.name }}</h3>
-                  <span class="text-sm font-semibold text-gray-300">${{ item.price.toFixed(2) }}</span>
-                </div>
-                <p class="text-xs text-gray-500 mb-3 line-clamp-1">{{ item.description }}</p>
-                <span class="inline-block text-[9px] font-bold uppercase tracking-wider text-blue-400 bg-blue-950/40 border border-blue-900/40 px-2 py-0.5 rounded">
-                  {{ item.category?.categoryName || 'General' }}
-                </span>
-              </div>
-            </div>
-            <div class="p-4 pt-0">
-              <button @click="addToBasket(item)" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs py-2.5 px-4 rounded-lg transition">
-                ADD TO ORDER
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="lg:col-span-3 flex flex-col gap-4">
-        <div class="bg-[#131a26] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden">
-          <div class="absolute top-0 right-4 bg-blue-950/50 border-x border-b border-blue-800/60 rounded-b-md px-3 py-1">
-            <span class="text-[9px] uppercase font-bold text-blue-400 tracking-wider">Your Reservation</span>
-          </div>
-
-          <div class="flex items-start gap-3 mt-4 mb-6">
-            <div class="bg-blue-950/40 border border-blue-900 p-2.5 rounded-lg text-blue-400">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
-              </svg>
-            </div>
-            <div>
-              <h4 class="font-semibold text-sm text-gray-200">Table {{ reservation.selectedTable || '--' }}</h4>
-              <p class="text-xs text-gray-400 mt-0.5">Tonight @ {{ reservation.time || '--:--' }} • {{ reservation.guests }} Guests</p>
-              <p class="text-[10px] text-blue-400 mt-0.5">Zone: {{ reservation.zone }}</p>
-            </div>
-          </div>
-
-          <hr class="border-gray-800/80 my-4" />
-
-          <div class="mb-6">
-            <h5 class="text-[10px] uppercase font-bold tracking-wider text-gray-500 mb-4">Pre-Order Basket</h5>
-            <div v-if="basket.length === 0" class="text-center py-6 text-xs italic text-gray-500">
-              No items added yet
-            </div>
-            <div v-else class="space-y-3 max-h-48 overflow-y-auto pr-1">
-              <div v-for="item in basket" :key="item.id" class="flex justify-between items-center text-xs">
-                <div class="flex items-center gap-2">
-                  <span class="text-gray-500 font-medium">x{{ item.quantity }}</span>
-                  <span class="text-gray-300 font-medium">{{ item.name }}</span>
-                </div>
-                <div class="flex items-center gap-3">
-                  <span class="text-gray-300">${{ (item.price * item.quantity).toFixed(2) }}</span>
-                  <button @click="removeFromBasket(item.id)" class="text-gray-600 hover:text-red-400 transition">✕</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <hr class="border-gray-800/80 my-4" />
-
-          <div class="flex justify-between items-center mb-5">
-            <span class="text-xs font-medium text-gray-400">Subtotal</span>
-            <span class="text-xl font-bold text-white">${{ basketTotal.toFixed(2) }}</span>
-          </div>
-
-          <button 
-            @click="submitReservation"
-            :disabled="isSubmitting"
-            :class="isSubmitting ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-500'"
-            class="w-full flex items-center justify-center gap-2 font-bold text-xs py-3 rounded-lg transition uppercase tracking-wider"
-          >
-            <span v-if="isSubmitting">⌛ Sending...</span>
-            <span v-else>▶ Confirm & Send</span>
+          </button>
+          <button class="p-2 text-gray-400 hover:text-white hover:bg-gray-800/40 rounded-xl transition-all duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
           </button>
         </div>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-5 md:gap-6 items-start">
+        
+        <div class="xl:col-span-4 flex flex-col gap-5 md:gap-6">
+          <div class="bg-[#0e131f]/90 backdrop-blur-md border border-gray-800/60 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40">
+            <div class="flex items-center gap-2.5 mb-5 text-blue-400 font-semibold tracking-wide text-sm">
+              <div class="p-2 bg-blue-500/10 rounded-lg">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                </svg>
+              </div>
+              <h2>Table Reservation</h2>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3.5 mb-4">
+              <div>
+                <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-1.5">Date</label>
+                <input type="date" v-model="reservation.date" class="w-full bg-[#141b29] border border-gray-800/80 rounded-xl px-3 py-2 sm:py-2.5 text-sm text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all" />
+              </div>
+              <div>
+                <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-1.5">Time</label>
+                <input type="time" v-model="reservation.time" class="w-full bg-[#141b29] border border-gray-800/80 rounded-xl px-3 py-2 sm:py-2.5 text-sm text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all" />
+              </div>
+            </div>
+
+            <div class="mb-5">
+              <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-1.5">Guests</label>
+              <div class="flex items-center justify-between bg-[#141b29] border border-gray-800/80 rounded-xl p-1 max-w-full">
+                <button @click="adjustGuests(-1)" class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-xl transition active:scale-95 font-bold text-lg">-</button>
+                <span class="text-xs sm:text-sm font-semibold text-white tracking-wide">{{ reservation.guests }} Guests</span>
+                <button @click="adjustGuests(1)" class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-xl transition active:scale-95 font-bold text-lg">+</button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-1.5">Select Floor Zone</label>
+              <div class="grid grid-cols-2 gap-3">
+                <button 
+                  @click="selectZone('Window Seat')"
+                  :class="reservation.zone === 'Window Seat' ? 'border-blue-500/80 bg-blue-500/5 text-blue-400 shadow-lg shadow-blue-500/5' : 'border-gray-800 bg-[#141b29]/40 text-gray-400 hover:border-gray-700'"
+                  class="flex flex-col items-center justify-center py-3 border rounded-xl transition-all duration-200 text-xs gap-1.5 font-medium active:scale-[0.98]"
+                >
+                  <span class="text-lg filter drop-shadow">🪟</span> Window Seat
+                </button>
+                <button 
+                  @click="selectZone('Quiet Booth')"
+                  :class="reservation.zone === 'Quiet Booth' ? 'border-blue-500/80 bg-blue-500/5 text-blue-400 shadow-lg shadow-blue-500/5' : 'border-gray-800 bg-[#141b29]/40 text-gray-400 hover:border-gray-700'"
+                  class="flex flex-col items-center justify-center py-3 border rounded-xl transition-all duration-200 text-xs gap-1.5 font-medium active:scale-[0.98]"
+                >
+                  <span class="text-xl filter drop-shadow">🛋️</span> Quiet Booth
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-[#0e131f]/90 backdrop-blur-md border border-gray-800/60 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40">
+            <h4 class="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-3.5">Available Tables Layout</h4>
+            
+            <div v-if="isLoadingTables" class="text-center text-xs text-blue-400 py-6 font-medium animate-pulse">
+              Loading layout map...
+            </div>
+            <div v-else-if="filteredTables.length === 0" class="text-center text-xs text-gray-500 py-6 border border-dashed border-gray-800 rounded-xl">
+              No structural seating configs found.
+            </div>
+            <div v-else class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-3 gap-2">
+              <button 
+                v-for="table in filteredTables" 
+                :key="table.id"
+                @click="reservation.selectedTable = table.tableNo"
+                :disabled="table.currentState !== 'AVAILABLE'"
+                :class="[
+                  reservation.selectedTable === table.tableNo 
+                    ? 'border-blue-500 bg-blue-600 text-white shadow-xl shadow-blue-600/20 font-bold' 
+                    : table.currentState !== 'AVAILABLE'
+                      ? 'border-gray-900 bg-gray-900/20 text-gray-600 cursor-not-allowed line-through opacity-40'
+                      : 'border-gray-800/80 bg-[#141b29]/60 text-gray-300 hover:border-gray-600 hover:bg-[#141b29]'
+                ]"
+                class="border py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 text-center relative active:scale-[0.96]"
+              >
+                <span class="block text-sm leading-tight">{{ table.tableNo }}</span>
+                <span :class="reservation.selectedTable === table.tableNo ? 'text-blue-200' : 'text-gray-500'" class="block text-[8px] mt-0.5 font-medium">Cap: {{ table.capacity }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-1 xl:col-span-5 flex flex-col">
+          <div class="flex items-center justify-between gap-2 mb-4 md:mb-6">
+            <div>
+              <h2 class="text-base font-bold text-white tracking-wide">Pre-Order Menu</h2>
+              <p class="text-xs text-gray-500">Skip the wait with express items.</p>
+            </div>
+            <span class="inline-flex items-center gap-1 text-[9px] uppercase font-bold bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-md border border-emerald-500/20 tracking-wider flex-shrink-0">
+              ⚡ Express
+            </span>
+          </div>
+
+          <div v-if="isLoadingMenu" class="flex flex-col items-center justify-center py-20 text-blue-400 gap-3 border border-gray-800/40 rounded-2xl bg-[#0e131f]/40">
+            <svg class="animate-spin h-6 w-6 text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="text-xs font-medium text-gray-400">Syncing catalog...</span>
+          </div>
+
+          <div v-else-if="menuErrorMessage" class="text-center py-10 px-4 text-xs text-red-400 border border-red-500/20 bg-red-500/5 rounded-2xl">
+            ⚠️ {{ menuErrorMessage }}
+          </div>
+
+          <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div 
+              v-for="item in menuItems" 
+              :key="item.id" 
+              class="bg-[#0e131f]/90 backdrop-blur-sm border border-gray-800/60 rounded-2xl overflow-hidden flex flex-col justify-between shadow-lg group hover:border-gray-700/80 transition-all duration-300"
+            >
+              <div class="flex sm:flex-col h-full">
+                <div class="w-28 h-full sm:w-full sm:h-40 bg-gray-900 overflow-hidden relative flex-shrink-0">
+                  <img :src="item.imageUrl" :alt="item.name" class="w-full h-full object-cover brightness-[0.85] group-hover:scale-105 transition-transform duration-500 ease-out" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent hidden sm:block"></div>
+                  <span 
+                    :class="item.status === 'IN STOCK' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'"
+                    class="absolute top-2 right-2 text-[8px] font-bold uppercase tracking-wider px-1.5 py-0.5 border rounded-md backdrop-blur-md shadow-sm"
+                  >
+                    {{ item.status }}
+                  </span>
+                </div>
+                
+                <div class="p-3 sm:p-4 flex flex-col justify-between w-full">
+                  <div>
+                    <div class="flex justify-between items-start gap-1 mb-1">
+                      <h3 class="font-bold text-xs sm:text-sm text-white group-hover:text-blue-400 transition-colors duration-200 line-clamp-1 leading-tight">{{ item.name }}</h3>
+                      <span class="text-xs sm:text-sm font-bold text-gray-200 flex-shrink-0">${{ item.price.toFixed(2) }}</span>
+                    </div>
+                    <p class="text-[11px] text-gray-400 mb-2 sm:mb-3 line-clamp-2 leading-tight sm:leading-relaxed h-7 sm:h-8">{{ item.description }}</p>
+                  </div>
+                  <div>
+                    <span class="inline-block text-[8px] font-bold uppercase tracking-wider text-blue-400 bg-blue-500/5 border border-blue-500/10 px-2 py-0.5 rounded-md">
+                      {{ item.category?.categoryName || 'General' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="p-3 pt-0 sm:p-4 sm:pt-0">
+                <button @click="addToBasket(item)" class="w-full bg-[#141b29] hover:bg-blue-600 border border-gray-800 group-hover:border-blue-500/40 text-gray-200 hover:text-white font-bold text-[11px] py-2 px-3 rounded-xl transition-all duration-200 active:scale-95">
+                  ADD TO ORDER
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="md:col-span-2 xl:col-span-3 flex flex-col h-full">
+          <div class="bg-[#0e131f]/90 backdrop-blur-md border border-gray-800/60 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40 h-full flex flex-col justify-between relative overflow-hidden">
+            <div class="absolute top-0 right-5 bg-gradient-to-b from-blue-600/20 to-transparent border-x border-blue-500/20 rounded-b-lg px-2.5 py-0.5">
+              <span class="text-[8px] uppercase font-black text-blue-400 tracking-widest">Live Desk Receipt</span>
+            </div>
+
+            <div>
+              <div class="flex items-center gap-3 mt-2 mb-4 md:mb-6">
+                <div class="bg-gradient-to-br from-blue-600/10 to-indigo-500/5 border border-blue-500/20 p-2 rounded-xl text-blue-400 flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-white tracking-wide">Table {{ reservation.selectedTable || '--' }}</h4>
+                  <p class="text-xs text-gray-400 mt-0.5">Tonight @ {{ reservation.time || '--:--' }} • {{ reservation.guests }} Guests</p>
+                  <p class="text-[9px] text-blue-400 font-semibold tracking-wide mt-0.5 uppercase">{{ reservation.zone }}</p>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-800/60 my-3"></div>
+
+              <div class="mb-4 sm:mb-6">
+                <h5 class="text-[10px] uppercase tracking-widest text-gray-500 font-bold mb-3">Pre-Order Items</h5>
+                <div v-if="basket.length === 0" class="text-center py-6 text-xs italic text-gray-500 border border-dashed border-gray-800 rounded-xl bg-[#141b29]/20">
+                  No products added yet
+                </div>
+                <div v-else class="space-y-2 max-h-40 sm:max-h-48 md:max-h-64 overflow-y-auto pr-1 customs-scroll">
+                  <div v-for="item in basket" :key="item.id" class="flex justify-between items-center text-xs bg-[#141b29]/40 border border-gray-800/40 p-2 rounded-xl">
+                    <div class="flex items-center gap-2">
+                      <span class="text-blue-400 font-bold bg-blue-500/10 px-1.5 py-0.5 rounded text-[9px]">x{{ item.quantity }}</span>
+                      <span class="text-gray-200 font-medium line-clamp-1 max-w-[130px] sm:max-w-none">{{ item.name }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="text-white font-semibold">${{ (item.price * item.quantity).toFixed(2) }}</span>
+                      <button @click="removeFromBasket(item.id)" class="text-gray-500 hover:text-red-400 p-1 rounded transition-all">✕</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="border-t border-gray-800/60 my-3"></div>
+
+              <div class="flex justify-between items-center mb-4">
+                <span class="text-xs font-semibold tracking-wide text-gray-400">Total Balance</span>
+                <span class="text-lg sm:text-xl font-black text-white tracking-tight">${{ basketTotal.toFixed(2) }}</span>
+              </div>
+
+              <button 
+                @click="submitReservation"
+                :disabled="isSubmitting"
+                :class="isSubmitting ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-xl shadow-blue-600/10 active:scale-[0.98]'"
+                class="w-full flex items-center justify-center gap-2 font-bold text-xs py-3 sm:py-3.5 rounded-xl transition-all duration-300 uppercase tracking-widest"
+              >
+                <span v-if="isSubmitting" class="flex items-center gap-2">
+                  <svg class="animate-spin h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  Processing...
+                </span>
+                <span v-else>Confirm Reservation</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
@@ -258,7 +289,7 @@ const fetchTablesData = async () => {
     }
   } catch (err) {
     console.error("Failed fetching dynamic floor layouts:", err)
-  } finally { // <--- Fixed Typo Here
+  } finally {
     isLoadingTables.value = false
   }
 }
@@ -299,7 +330,7 @@ const fetchMenuItems = async () => {
       throw new Error(apiResponse.message)
     }
   } catch (error) {
-    menuErrorMessage.value = "Could not pull the live pre-order menu."
+    menuErrorMessage.value = "Could not pull the live pre-order menu catalog."
   } finally {
     isLoadingMenu.value = false
   }
@@ -371,9 +402,22 @@ const basketTotal = computed(() => {
 </script>
 
 <style scoped>
+/* Mobile Input Indicators Styling Fixes */
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.7);
+  filter: invert(0.85) hue-rotate(140deg) brightness(1.2);
   cursor: pointer;
+}
+
+/* Subtle customs scroll tracker track alignment bar */
+.customs-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.customs-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.customs-scroll::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.15);
+  border-radius: 99px;
 }
 </style>
