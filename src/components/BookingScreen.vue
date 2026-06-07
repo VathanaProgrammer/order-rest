@@ -228,6 +228,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+// Fixed: Swapped abstract alias path prefix for direct relative file access path
+import api from '../utils/api' 
 
 // Base reactive state parameters
 const reservation = ref({
@@ -247,22 +249,14 @@ const isLoading = ref(false)
 const isSubmitting = ref(false)
 const errorMessage = ref('')
 
-// TEAM ENDPOINT VARIABLE CONFIGURATION
-const BASE_URL = 'http://localhost:7444/api'
-
-// Fetch layout mapped directly to your team's JSON data output structure
+// Fetch layout mapped directly to your custom layout via api.get
 const fetchMenuItems = async () => {
   isLoading.value = true
   errorMessage.value = ''
   try {
-    const response = await fetch(`${BASE_URL}/menu-items`)
-    if (!response.ok) {
-      throw new Error(`Server connection failure. HTTP Status: ${response.status}`)
-    }
+    const apiResponse = await api.get('/menu-items')
     
-    const apiResponse = await response.json()
-    
-    // Checks your team's explicit custom response status parameter layout (status: 1)
+    // Checks your explicit custom parameter data response status layout
     if (apiResponse.status === 1) {
       menuItems.value = apiResponse.data
     } else {
@@ -276,7 +270,7 @@ const fetchMenuItems = async () => {
   }
 }
 
-// POST pipeline request to write entries into the Database
+// POST pipeline request using api.post
 const submitReservation = async () => {
   if (!reservation.value.date) {
     alert("Please select a reservation date before submitting your booking.")
@@ -299,23 +293,10 @@ const submitReservation = async () => {
   }
 
   try {
-    const response = await fetch(`${BASE_URL}/reservations`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    })
-
-    if (!response.ok) {
-      throw new Error(`Server tracking returned rejection status: ${response.status}`)
-    }
-
-    const result = await response.json()
+    const result = await api.post('/reservations', payload)
 
     if (result.status === 1) {
       alert("🎉 Reservation saved successfully in the database!")
-      // Clear out selection arrays upon completion
       basket.value = []
     } else {
       throw new Error(result.message || "Failed saving metadata record parameters.")
