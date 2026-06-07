@@ -112,24 +112,31 @@
           <div 
             v-for="item in menuItems" 
             :key="item.id" 
-            v-show="item.isAvailable" 
-            class="bg-[#131a26] border border-gray-800/80 rounded-xl overflow-hidden flex flex-col justify-between shadow-md"
+            class="bg-[#131a26] border border-gray-800/80 rounded-xl overflow-hidden flex flex-col justify-between shadow-md relative"
           >
             <div>
               <div class="h-40 bg-gray-900 overflow-hidden relative">
                 <img 
-                  :src="item.imageUrl && item.imageUrl.startsWith('http') ? item.imageUrl : `http://localhost:7444${item.imageUrl || ''}`" 
+                  :src="item.imageUrl" 
                   :alt="item.name" 
                   class="w-full h-full object-cover brightness-90 contrast-125" 
                 />
+                <span 
+                  :class="item.status === 'IN STOCK' ? 'bg-emerald-950/80 text-emerald-400 border-emerald-800/60' : 'bg-amber-950/80 text-amber-400 border-amber-800/60'"
+                  class="absolute top-2 right-2 text-[9px] font-bold uppercase px-2 py-0.5 border rounded backdrop-blur-sm shadow-md"
+                >
+                  {{ item.status }}
+                </span>
               </div>
               <div class="p-4">
-                <div class="flex justify-between items-baseline gap-1 mb-2">
-                  <h3 class="font-medium text-sm text-gray-200">{{ item.name }}</h3>
+                <div class="flex justify-between items-baseline gap-1 mb-1">
+                  <h3 class="font-medium text-sm text-gray-200 leading-tight">{{ item.name }}</h3>
                   <span class="text-sm font-semibold text-gray-300">${{ item.price.toFixed(2) }}</span>
                 </div>
+                <p class="text-xs text-gray-500 mb-3 line-clamp-1">{{ item.description }}</p>
+                
                 <span class="inline-block text-[9px] font-bold uppercase tracking-wider text-blue-400 bg-blue-950/40 border border-blue-900/40 px-2 py-0.5 rounded">
-                  {{ item.itemType }}
+                  {{ item.category?.categoryName || 'General' }}
                 </span>
               </div>
             </div>
@@ -255,7 +262,7 @@ const fetchMenuItems = async () => {
     
     const apiResponse = await response.json()
     
-    // Checks your team's explicit custom response status parameter layout
+    // Checks your team's explicit custom response status parameter layout (status: 1)
     if (apiResponse.status === 1) {
       menuItems.value = apiResponse.data
     } else {
