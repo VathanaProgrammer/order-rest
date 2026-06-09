@@ -111,6 +111,12 @@
               >
                 <span class="block text-sm leading-tight">{{ table.tableNo }}</span>
                 <span :class="reservation.selectedTable === table.tableNo ? 'text-blue-200' : 'text-gray-500'" class="block text-[8px] mt-0.5 font-medium">Cap: {{ table.capacity }}</span>
+                
+                <div v-if="table.currentState !== 'AVAILABLE'" class="absolute inset-0 flex items-center justify-center bg-black/60 rounded-xl backdrop-blur-[1px]">
+                  <span class="text-[9px] font-black tracking-widest text-red-500 uppercase rotate-[-15deg] border border-red-500/30 bg-red-500/10 px-2 py-0.5 rounded shadow-lg shadow-red-500/20">
+                    BOOKED
+                  </span>
+                </div>
               </button>
             </div>
           </div>
