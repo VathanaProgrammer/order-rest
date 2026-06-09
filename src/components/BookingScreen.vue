@@ -32,7 +32,8 @@
       <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-5 md:gap-6 items-start">
         
         <div class="xl:col-span-4 flex flex-col gap-5 md:gap-6">
-          <div class="bg-[#0e131f]/90 backdrop-blur-md border border-gray-800/60 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40">
+          <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all duration-700 pointer-events-none"></div>
             <div class="flex items-center gap-2.5 mb-5 text-blue-400 font-semibold tracking-wide text-sm">
               <div class="p-2 bg-blue-500/10 rounded-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-4 h-4">
@@ -45,17 +46,17 @@
             <div class="grid grid-cols-2 gap-3.5 mb-4">
               <div>
                 <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-1.5">Date</label>
-                <input type="date" v-model="reservation.date" class="w-full bg-[#141b29] border border-gray-800/80 rounded-xl px-3 py-2 sm:py-2.5 text-sm text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all" />
+                <input type="date" v-model="reservation.date" class="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-xl px-3 py-2 sm:py-2.5 text-sm text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-inner" />
               </div>
               <div>
                 <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-1.5">Time</label>
-                <input type="time" v-model="reservation.time" class="w-full bg-[#141b29] border border-gray-800/80 rounded-xl px-3 py-2 sm:py-2.5 text-sm text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all" />
+                <input type="time" v-model="reservation.time" class="w-full bg-white/5 backdrop-blur-md border border-white/10 rounded-xl px-3 py-2 sm:py-2.5 text-sm text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all shadow-inner" />
               </div>
             </div>
 
             <div class="mb-5">
               <label class="block text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-1.5">Guests</label>
-              <div class="flex items-center justify-between bg-[#141b29] border border-gray-800/80 rounded-xl p-1 max-w-full">
+              <div class="flex items-center justify-between bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-1 max-w-full shadow-inner">
                 <button @click="adjustGuests(-1)" class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-xl transition active:scale-95 font-bold text-lg">-</button>
                 <span class="text-xs sm:text-sm font-semibold text-white tracking-wide">{{ reservation.guests }} Guests</span>
                 <button @click="adjustGuests(1)" class="w-9 h-9 flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800/50 rounded-xl transition active:scale-95 font-bold text-lg">+</button>
@@ -67,14 +68,14 @@
               <div class="grid grid-cols-2 gap-3">
                 <button 
                   @click="selectZone('Window Seat')"
-                  :class="reservation.zone === 'Window Seat' ? 'border-blue-500/80 bg-blue-500/5 text-blue-400 shadow-lg shadow-blue-500/5' : 'border-gray-800 bg-[#141b29]/40 text-gray-400 hover:border-gray-700'"
+                  :class="reservation.zone === 'Window Seat' ? 'border-blue-500/80 bg-blue-500/10 text-blue-400 shadow-lg shadow-blue-500/10' : 'border-white/10 bg-white/5 backdrop-blur-sm text-gray-400 hover:border-white/20 hover:bg-white/10'"
                   class="flex flex-col items-center justify-center py-3 border rounded-xl transition-all duration-200 text-xs gap-1.5 font-medium active:scale-[0.98]"
                 >
                   <span class="text-lg filter drop-shadow">🪟</span> Window Seat
                 </button>
                 <button 
                   @click="selectZone('Quiet Booth')"
-                  :class="reservation.zone === 'Quiet Booth' ? 'border-blue-500/80 bg-blue-500/5 text-blue-400 shadow-lg shadow-blue-500/5' : 'border-gray-800 bg-[#141b29]/40 text-gray-400 hover:border-gray-700'"
+                  :class="reservation.zone === 'Quiet Booth' ? 'border-blue-500/80 bg-blue-500/10 text-blue-400 shadow-lg shadow-blue-500/10' : 'border-white/10 bg-white/5 backdrop-blur-sm text-gray-400 hover:border-white/20 hover:bg-white/10'"
                   class="flex flex-col items-center justify-center py-3 border rounded-xl transition-all duration-200 text-xs gap-1.5 font-medium active:scale-[0.98]"
                 >
                   <span class="text-xl filter drop-shadow">🛋️</span> Quiet Booth
@@ -83,7 +84,8 @@
             </div>
           </div>
 
-          <div class="bg-[#0e131f]/90 backdrop-blur-md border border-gray-800/60 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40">
+          <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 shadow-2xl relative overflow-hidden group">
+            <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all duration-700 pointer-events-none"></div>
             <h4 class="text-[10px] uppercase tracking-widest text-gray-400 font-semibold mb-3.5">Available Tables Layout</h4>
             
             <div v-if="isLoadingTables" class="text-center text-xs text-blue-400 py-6 font-medium animate-pulse">
@@ -100,10 +102,10 @@
                 :disabled="table.currentState !== 'AVAILABLE'"
                 :class="[
                   reservation.selectedTable === table.tableNo 
-                    ? 'border-blue-500 bg-blue-600 text-white shadow-xl shadow-blue-600/20 font-bold' 
+                    ? 'border-blue-500 bg-blue-600/90 text-white shadow-xl shadow-blue-600/30 font-bold backdrop-blur-md' 
                     : table.currentState !== 'AVAILABLE'
-                      ? 'border-gray-900 bg-gray-900/20 text-gray-600 cursor-not-allowed line-through opacity-40'
-                      : 'border-gray-800/80 bg-[#141b29]/60 text-gray-300 hover:border-gray-600 hover:bg-[#141b29]'
+                      ? 'border-white/5 bg-black/20 text-gray-600 cursor-not-allowed line-through opacity-40'
+                      : 'border-white/10 bg-white/5 backdrop-blur-sm text-gray-300 hover:border-white/20 hover:bg-white/10'
                 ]"
                 class="border py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 text-center relative active:scale-[0.96]"
               >
@@ -141,7 +143,7 @@
             <div 
               v-for="item in menuItems" 
               :key="item.id" 
-              class="bg-[#0e131f]/90 backdrop-blur-sm border border-gray-800/60 rounded-2xl overflow-hidden flex flex-col justify-between shadow-lg group hover:border-gray-700/80 transition-all duration-300"
+              class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl relative hover:-translate-y-1 hover:shadow-blue-900/20 hover:border-white/20 transition-all duration-300 group"
             >
               <div class="flex sm:flex-col h-full">
                 <div class="w-28 h-full sm:w-full sm:h-40 bg-gray-900 overflow-hidden relative flex-shrink-0">
@@ -181,7 +183,8 @@
         </div>
 
         <div class="md:col-span-2 xl:col-span-3 flex flex-col h-full">
-          <div class="bg-[#0e131f]/90 backdrop-blur-md border border-gray-800/60 rounded-2xl p-4 sm:p-5 shadow-2xl shadow-black/40 h-full flex flex-col justify-between relative overflow-hidden">
+          <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-4 sm:p-6 shadow-2xl h-full flex flex-col justify-between relative overflow-hidden group">
+            <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-600/10 rounded-full blur-3xl group-hover:bg-indigo-600/20 transition-all duration-700 pointer-events-none"></div>
             <div class="absolute top-0 right-5 bg-gradient-to-b from-blue-600/20 to-transparent border-x border-blue-500/20 rounded-b-lg px-2.5 py-0.5">
               <span class="text-[8px] uppercase font-black text-blue-400 tracking-widest">Live Desk Receipt</span>
             </div>
