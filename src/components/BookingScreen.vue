@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#0b0f19] text-[#e2e8f0] font-sans antialiased p-6 selection:bg-blue-500 selection:text-white">
+  <div class="min-h-screen bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#0b0f19] to-black text-[#e2e8f0] font-sans antialiased p-4 md:p-8 selection:bg-blue-500 selection:text-white">
     <header class="flex justify-between items-center mb-8 border-b border-gray-800 pb-4">
       <h1 class="text-xl font-bold tracking-wide text-gray-200">HEKS Guest</h1>
       <div class="flex items-center gap-4 text-gray-400">
@@ -19,7 +19,8 @@
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
       
       <div class="lg:col-span-4 flex flex-col gap-6">
-        <div class="bg-[#131a26] border border-gray-800 rounded-xl p-5 shadow-xl">
+        <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden group">
+          <div class="absolute -top-24 -right-24 w-48 h-48 bg-blue-600/10 rounded-full blur-3xl group-hover:bg-blue-600/20 transition-all duration-700"></div>
           <div class="flex items-center gap-2 mb-6 text-blue-400 font-semibold">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
@@ -68,7 +69,7 @@
           </div>
         </div>
 
-        <div class="bg-[#131a26] border border-gray-800 rounded-xl p-5 shadow-xl grid grid-cols-3 gap-3">
+        <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl grid grid-cols-3 gap-3">
           <button 
             v-for="table in tables" 
             :key="table"
@@ -112,7 +113,7 @@
           <div 
             v-for="item in menuItems" 
             :key="item.id" 
-            class="bg-[#131a26] border border-gray-800/80 rounded-xl overflow-hidden flex flex-col justify-between shadow-md relative"
+            class="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl overflow-hidden flex flex-col justify-between shadow-xl relative hover:-translate-y-1 hover:shadow-blue-900/20 hover:border-white/20 transition-all duration-300 group"
           >
             <div>
               <div class="h-40 bg-gray-900 overflow-hidden relative">
@@ -153,7 +154,7 @@
       </div>
 
       <div class="lg:col-span-3 flex flex-col gap-4">
-        <div class="bg-[#131a26] border border-gray-800 rounded-xl p-5 shadow-xl relative overflow-hidden">
+        <div class="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
           
           <div class="absolute top-0 right-4 bg-blue-950/50 border-x border-b border-blue-800/60 rounded-b-md px-3 py-1">
             <span class="text-[9px] uppercase font-bold text-blue-400 tracking-wider">Your Reservation</span>
@@ -212,7 +213,7 @@
           </button>
         </div>
 
-        <div class="border border-gray-900 bg-[#0e141f] rounded-xl px-4 py-3 flex items-center gap-3 text-xs text-gray-400">
+        <div class="border border-white/10 bg-white/5 backdrop-blur-md rounded-2xl px-4 py-4 flex items-center gap-3 text-xs text-gray-400">
           <div class="text-emerald-500">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
               <path fill-rule="evenodd" d="M12.516 2.17a.75.75 0 0 0-1.032 0 11.209 11.209 0 0 1-7.877 3.475.75.75 0 0 0-.722.668A12.178 12.178 0 0 0 3 9c0 5.523 3.635 10.19 8.658 11.75a.75.75 0 0 0 .484 0C17.165 19.19 20.8 14.523 20.8 9c0-.445-.03-.882-.089-1.311a.75.75 0 0 0-.722-.668 11.21 11.21 0 0 1-7.473-3.475ZM11.25 8.25a.75.75 0 0 1 1.5 0v4.5a.75.75 0 0 1-1.5 0v-4.5Zm.75 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
@@ -228,6 +229,9 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { useToast } from '../composables/useToast'
+
+const { showToast } = useToast()
 
 // Base reactive state parameters
 const reservation = ref({
@@ -248,7 +252,7 @@ const isSubmitting = ref(false)
 const errorMessage = ref('')
 
 // TEAM ENDPOINT VARIABLE CONFIGURATION
-const BASE_URL = 'http://localhost:7444/api'
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:7444/api'
 
 // Fetch layout mapped directly to your team's JSON data output structure
 const fetchMenuItems = async () => {
@@ -271,6 +275,7 @@ const fetchMenuItems = async () => {
   } catch (error) {
     console.error("Backend Handshake Error Details:", error)
     errorMessage.value = "Could not pull the live pre-order menu. Check backend execution or network status."
+    showToast("Connection Error", errorMessage.value, "error")
   } finally {
     isLoading.value = false
   }
@@ -279,7 +284,7 @@ const fetchMenuItems = async () => {
 // POST pipeline request to write entries into the Database
 const submitReservation = async () => {
   if (!reservation.value.date) {
-    alert("Please select a reservation date before submitting your booking.")
+    showToast("Missing Date", "Please select a reservation date before submitting your booking.", "warning")
     return
   }
 
@@ -314,7 +319,7 @@ const submitReservation = async () => {
     const result = await response.json()
 
     if (result.status === 1) {
-      alert("🎉 Reservation saved successfully in the database!")
+      showToast("Booking Confirmed", "🎉 Reservation saved successfully in the database!", "success", 6000)
       // Clear out selection arrays upon completion
       basket.value = []
     } else {
@@ -322,7 +327,7 @@ const submitReservation = async () => {
     }
   } catch (error) {
     console.error("Database Write Handshake Failure:", error)
-    alert("Could not process request checkout. Check database or Spring console status logs.")
+    showToast("Checkout Failed", "Could not process request checkout. Check database or network status.", "error")
   } finally {
     isSubmitting.value = false
   }
