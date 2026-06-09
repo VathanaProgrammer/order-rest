@@ -281,15 +281,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useToast } from '../composables/useToast'
 import api from '../utils/api' 
 
 const { showToast } = useToast()
 
 // Core Booking States
+const getTodayDateString = () => new Date().toISOString().split('T')[0];
+
 const reservation = ref({
-  date: '',
+  date: getTodayDateString(),
   time: '19:30',
   guests: 2,
   zone: 'Window Seat', 
@@ -312,9 +314,10 @@ const menuErrorMessage = ref('')
  * 1. FETCH GROUPED DINING TABLES
  */
 const fetchTablesData = async () => {
+  if (!reservation.value.date || !reservation.value.time) return;
   isLoadingTables.value = true
   try {
-    const res = await api.get('/dining-tables/grouped') 
+    const res = await api.get(`/dining-tables/availability?date=${reservation.value.date}&time=${reservation.value.time}`) 
     if (res.status === 1) {
       rawFloorGroups.value = res.data
       autoSelectFirstAvailable()
@@ -325,6 +328,10 @@ const fetchTablesData = async () => {
     isLoadingTables.value = false
   }
 }
+
+watch([() => reservation.value.date, () => reservation.value.time], () => {
+  fetchTablesData()
+})
 
 /**
  * 2. COMPUTED FILTER
