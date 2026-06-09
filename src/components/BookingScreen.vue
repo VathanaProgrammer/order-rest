@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-[#070a13] text-[#f1f5f9] font-sans antialiased selection:bg-blue-600 selection:text-white pb-12">
+  <div class="min-h-screen bg-[#070a13] text-[#f1f5f9] font-sans antialiased selection:bg-blue-600 selection:text-white pb-28 xl:pb-12">
     <div class="absolute top-0 left-1/4 w-72 md:w-96 h-72 md:h-96 bg-blue-900/10 rounded-full blur-3xl pointer-events-none"></div>
     <div class="absolute bottom-10 right-1/4 w-72 md:w-96 h-72 md:h-96 bg-indigo-900/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -171,8 +171,8 @@
                 </div>
               </div>
               
-              <div class="p-3 pt-0 sm:p-4 sm:pt-0">
-                <button @click="addToBasket(item)" class="w-full bg-[#141b29] hover:bg-blue-600 border border-gray-800 group-hover:border-blue-500/40 text-gray-200 hover:text-white font-bold text-[11px] py-2 px-3 rounded-xl transition-all duration-200 active:scale-95">
+              <div class="p-3 pt-0 sm:p-4 sm:pt-0 mt-auto">
+                <button @click="addToBasket(item)" class="w-full bg-[#141b29] hover:bg-blue-600 border border-gray-800 group-hover:border-blue-500/40 text-gray-200 hover:text-white font-bold text-[11px] py-3 sm:py-2 px-3 rounded-xl transition-all duration-200 active:scale-95">
                   ADD TO ORDER
                 </button>
               </div>
@@ -247,6 +247,26 @@
         </div>
 
       </div>
+    </div>
+
+    <!-- Mobile Sticky Checkout Bar -->
+    <div 
+      class="fixed bottom-0 left-0 right-0 p-4 bg-[#0e131f]/95 backdrop-blur-xl border-t border-gray-800/60 shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-50 xl:hidden flex justify-between items-center transition-transform duration-300" 
+      :class="(basket.length > 0 || reservation.selectedTable) ? 'translate-y-0' : 'translate-y-full'"
+    >
+      <div>
+        <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider mb-0.5">Table {{ reservation.selectedTable || '--' }}</p>
+        <p class="text-lg font-black text-white leading-none">${{ basketTotal.toFixed(2) }}</p>
+      </div>
+      <button 
+        @click="submitReservation"
+        :disabled="isSubmitting"
+        :class="isSubmitting ? 'bg-gray-800 text-gray-500 cursor-not-allowed' : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-500/20 active:scale-95'"
+        class="px-8 py-3 rounded-xl font-bold text-xs uppercase tracking-widest transition-all"
+      >
+        <span v-if="isSubmitting">...</span>
+        <span v-else>Confirm</span>
+      </button>
     </div>
   </div>
 </template>
