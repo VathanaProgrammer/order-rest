@@ -27,24 +27,26 @@ jobs:
       - name: Copy Files to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
-          host: 52.221.243.62
+          host: 13.212.150.130
           username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key: ${{ secrets.UI_EC2_SSH_KEY }}
           source: "."
           target: "~/deploy-order-ui"
           
-      - name: Build and Run with Docker Compose on EC2
+      - name: Build and Deploy to K3s
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: 52.221.243.62
+          host: 13.212.150.130
           username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key: ${{ secrets.UI_EC2_SSH_KEY }}
           script: |
             cd ~/deploy-order-ui
-            docker rm -f order-rest || true
-            docker compose down --remove-orphans || true
-            docker compose up -d --build
-            docker image prune -f
+            docker build -t order-rest:latest .
+            docker save order-rest:latest > order-rest.tar
+            sudo k3s ctr images import order-rest.tar
+            sudo k3s kubectl set image deployment/order-rest-deployment order-rest=order-rest:latest --local -o yaml | sudo k3s kubectl apply -f -
+            sudo k3s kubectl rollout restart deployment order-rest-deployment
+            rm order-rest.tar
       - name: Send Telegram Notification (Success)
         uses: appleboy/telegram-action@master
         if: success()
