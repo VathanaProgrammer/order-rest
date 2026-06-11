@@ -24,29 +24,27 @@ jobs:
           npm install
           npm run build
           
-      - name: Copy Files to EC2
-        uses: appleboy/scp-action@v0.1.4
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
         with:
-          host: 54.169.242.108
-          username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: "dist,nginx.conf,Dockerfile"
-          target: "~/deploy-order-ui"
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           
-      - name: Build and Deploy to K3s
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: vathanaprogrammer/order-rest:latest
+          
+      - name: Deploy to K3s
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: 54.169.242.108
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/deploy-order-ui
-            docker build -t order-rest:latest .
-            docker save order-rest:latest > order-rest.tar
-            sudo k3s ctr images import order-rest.tar
-            sudo k3s kubectl set image deployment/order-rest-deployment order-rest=order-rest:latest --local -o yaml | sudo k3s kubectl apply -f -
-            sudo k3s kubectl rollout restart deployment order-rest-deployment
-            rm order-rest.tar
+            sudo k3s kubectl rollout restart deployment/order-rest-deployment
       - name: Send Telegram Notification (Success)
         uses: appleboy/telegram-action@master
         if: success()
